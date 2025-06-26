@@ -11,10 +11,11 @@ class TodoController
         $this->todo = new Todo($mysqli);
     }
 
-    public function index()
-    {
+    public function index() {
         $todos = $this->todo->all();
-        require __DIR__ . '/../views/todos/index.php';
+        $title = 'Todo List';
+        $view = __DIR__ . '/../views/todos/index.php';
+        require __DIR__ . '/../views/layout.php';
     }
 
     public function create()
@@ -26,6 +27,17 @@ class TodoController
         header('Location: index.php');
         exit;
     }
+
+    public function updateStatus()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['status'])) {
+        $id = (int)$_POST['id'];
+        $status = (int)$_POST['status'];
+        $this->todo->updateStatus($id, $status);
+    }
+    header('Location: index.php');
+    exit;
+}
 
     // You can add more methods for updateStatus and delete if needed
 }

@@ -16,15 +16,45 @@ if ($mysqli->connect_errno) {
 
 // Controller
 require_once __DIR__ . '/controllers/TodoController.php';
-$controller = new TodoController($mysqli);
+require_once __DIR__ . '/controllers/UserController.php';
 
-// Routing
-$action = $_GET['action'] ?? 'index';
-switch ($action) {
-    case 'create':
-        $controller->create();
+// Get the path from the URL
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$path = trim($path, '/');
+$action = $_GET['action'] ?? '';
+$method = $_SERVER['REQUEST_METHOD'];
+
+// Remove any base directory if your app is not in the web root
+// For example, if your app is in /src, use:
+if (strpos($path, 'src/') === 0) {
+    $path = substr($path, 4);
+}
+
+$todoController = new TodoController($mysqli);
+$userController = new UserController($mysqli);
+
+switch ($path) {
+    case '':
+    case 'todos':
+        if($method === 'POST' && $action === 'createTodo') {
+            $todoController->create();
+        } elseif ($method === 'POST' && $action === 'updateStatus') {
+            $todoController->updateStatus();
+        } else {
+            $todoController->index();
+        }
+        break;
+    case 'users':
+        // $userController->index();
+        if($method === 'POST' && $action === 'createUser') {
+            $userController->create();
+        } elseif ($method === 'POST' && $action === 'deleteUser') {
+            $userController->delete();
+        } else {
+            $userController->index();
+        }
         break;
     default:
-        $controller->index();
-        break;
+        header("Location: /todos");
+        exit;
 }
