@@ -11,7 +11,10 @@ class Todo
 
     public function all()
     {
-        $result = $this->mysqli->query("SELECT * FROM todos ORDER BY id DESC");
+        $result = $this->mysqli->query("SELECT todos.*, users.name AS user_name
+            FROM todos
+            LEFT JOIN users ON todos.user_id = users.id
+            ORDER BY todos.id DESC");
         return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
@@ -23,10 +26,9 @@ class Todo
         return $stmt->get_result()->fetch_assoc();
     }
 
-    public function create($title)
-    {
-        $stmt = $this->mysqli->prepare("INSERT INTO todos (title, status) VALUES (?, 0)");
-        $stmt->bind_param("s", $title);
+    public function create($title, $user_id) {
+        $stmt = $this->mysqli->prepare("INSERT INTO todos (title, user_id) VALUES (?, ?)");
+        $stmt->bind_param("si", $title, $user_id);
         return $stmt->execute();
     }
 

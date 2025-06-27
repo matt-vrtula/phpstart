@@ -40,6 +40,8 @@ switch ($path) {
             $todoController->create();
         } elseif ($method === 'POST' && $action === 'updateStatus') {
             $todoController->updateStatus();
+        } elseif ($method === 'POST' && $action === 'deleteTodo') {
+            $todoController->delete();
         } else {
             $todoController->index();
         }
