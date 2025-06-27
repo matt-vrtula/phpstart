@@ -57,6 +57,10 @@ switch ($path) {
         }
         break;
     default:
+        if (strpos($path, 'api/') === 0) {
+            // Do nothing, let api.php handle it
+            exit;
+        }
         header("Location: /todos");
         exit;
 }

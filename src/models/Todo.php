@@ -18,6 +18,21 @@ class Todo
         return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
+    public function allByUser($user_id)
+    {
+        $stmt = $this->mysqli->prepare(
+            "SELECT todos.*, users.name AS user_name
+            FROM todos
+            LEFT JOIN users ON todos.user_id = users.id
+            WHERE todos.user_id = ?
+            ORDER BY todos.id DESC"
+        );
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    }
+
     public function find($id)
     {
         $stmt = $this->mysqli->prepare("SELECT * FROM todos WHERE id = ?");

@@ -1,4 +1,10 @@
 RewriteEngine On
+
+# Let /api/* requests go to api.php
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteRule ^api/(.*)$ api.php [QSA,L]
+
+# Other rules
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
