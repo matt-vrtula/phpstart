@@ -7,12 +7,17 @@
 </head>
 <body>
     <div class="container">
+        <?php if (isset($_SESSION['user_id'])): ?>
         <nav class="sidebar">
             <ul>
                 <li><a href="/todos">Todos</a></li>
                 <li><a href="/users">Users</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <li><a href="/logout">Logout</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
+        <?php endif; ?>
         <main class="content">
             <?php
             if (isset($view)) {

@@ -17,6 +17,7 @@ if ($mysqli->connect_errno) {
 // Controller
 require_once __DIR__ . '/controllers/TodoController.php';
 require_once __DIR__ . '/controllers/UserController.php';
+require_once __DIR__ . '/controllers/AuthController.php';
 
 // Get the path from the URL
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -32,9 +33,36 @@ if (strpos($path, 'src/') === 0) {
 
 $todoController = new TodoController($mysqli);
 $userController = new UserController($mysqli);
+$authController = new AuthController($mysqli);
+
+session_start();
+
+// List of public routes
+$publicRoutes = ['login', 'register', 'api'];
+
+// Allow access to public routes and API
+$isPublic = false;
+foreach ($publicRoutes as $route) {
+    if ($path === $route || strpos($path, $route . '/') === 0) {
+        $isPublic = true;
+        break;
+    }
+}
+
+if (!$isPublic && !isset($_SESSION['user_id'])) {
+    header('Location: /login');
+    exit;
+}
 
 switch ($path) {
-    case '':
+    case 'login':
+        $authController->login();
+        break;
+    case 'register':
+        $authController->register();
+        break;
+    case 'logout':
+        $authController->logout();
     case 'todos':
         if($method === 'POST' && $action === 'createTodo') {
             $todoController->create();
