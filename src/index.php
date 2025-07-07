@@ -18,6 +18,7 @@ if ($mysqli->connect_errno) {
 require_once __DIR__ . '/controllers/TodoController.php';
 require_once __DIR__ . '/controllers/UserController.php';
 require_once __DIR__ . '/controllers/AuthController.php';
+require_once __DIR__ . '/helpers/helpers.php';
 
 // Get the path from the URL
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -49,7 +50,7 @@ foreach ($publicRoutes as $route) {
     }
 }
 
-if (!$isPublic && !isset($_SESSION['user_id'])) {
+if (!$isPublic && !isLoggedIn()) {
     header('Location: /login');
     exit;
 }

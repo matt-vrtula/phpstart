@@ -1,3 +1,10 @@
+<?php 
+    // require_once __DIR__ . '/../controllers/AuthController.php'; 
+    require_once __DIR__ . '/../helpers/helpers.php'; // Adjust the path as needed
+    // $authController = new AuthController($mysqli);
+    // $loggedIn = $authController->isLoggedIn();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,12 +14,12 @@
 </head>
 <body>
     <div class="container">
-        <?php if (isset($_SESSION['user_id'])): ?>
+        <?php if (isLoggedIn()): ?>
         <nav class="sidebar">
             <ul>
                 <li><a href="/todos">Todos</a></li>
                 <li><a href="/users">Users</a></li>
-                <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if (isLoggedIn()): ?>
                     <li><a href="/logout">Logout</a></li>
                 <?php endif; ?>
             </ul>
